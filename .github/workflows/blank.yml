@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Baixar código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Instalar dependências
         run: |
@@ -27,12 +27,11 @@ jobs:
         run: |
           cd app
           npx expo prebuild
-          npx expo export
           mkdir -p ../build-output
           echo "Simulação de geração do APK para o Encontro Na Esquina" > ../build-output/EncontroNaEsquina-App.apk
 
       - name: Salvar APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: EncontroNaEsquina-App
           path: build-output/EncontroNaEsquina-App.apk
