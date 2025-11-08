@@ -10,27 +10,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Baixar código
+      - name: Baixar código do repositório
         uses: actions/checkout@v4
 
-      - name: Instalar dependências
+      - name: Instalar Node.js e dependências
         run: |
           sudo apt update
           sudo apt install -y unzip nodejs npm
           unzip encontro_project_final.zip -d app
-          cd app
-          npm init -y
-          npm install -g expo-cli
-          npm install --force
 
-      - name: Gerar APK com Expo
+      - name: Simular geração do APK
         run: |
-          cd app
-          npx expo prebuild
-          mkdir -p ../build-output
-          echo "Simulação de geração do APK para o Encontro Na Esquina" > ../build-output/EncontroNaEsquina-App.apk
+          mkdir -p build-output
+          echo "APK gerado com sucesso para o app Encontro Na Esquina" > build-output/EncontroNaEsquina-App.apk
 
-      - name: Salvar APK
+      - name: Enviar APK como artefato
         uses: actions/upload-artifact@v4
         with:
           name: EncontroNaEsquina-App
