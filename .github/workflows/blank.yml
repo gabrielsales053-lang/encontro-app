@@ -1,31 +1,36 @@
-name: Build APK
+name: Criar APK
 
 on:
   push:
-    branches:
-      - main
+    branches: [principal, main]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Baixar código do repositório
+      - name: Checar repositório
         uses: actions/checkout@v4
 
-      - name: Instalar Node.js e dependências
-        run: |
-          sudo apt update
-          sudo apt install -y unzip nodejs npm
-          unzip encontro_project_final.zip -d app
+      - name: Instalar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
-      - name: Simular geração do APK
-        run: |
-          mkdir -p build-output
-          echo "APK gerado com sucesso para o app Encontro Na Esquina" > build-output/EncontroNaEsquina-App.apk
+      - name: Configurar Gradle
+        uses: gradle/gradle-build-action@v3
 
-      - name: Enviar APK como artefato
+      - name: Construir projeto Android
+        working-directory: android
+        run: |
+          chmod +x gradlew || true
+          gradle wrapper
+          ./gradlew assembleDebug --stacktrace
+
+      - name: Publicar APK
         uses: actions/upload-artifact@v4
         with:
           name: EncontroNaEsquina-App
-          path: build-output/EncontroNaEsquina-App.apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
